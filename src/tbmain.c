@@ -18,6 +18,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
+ *
+ * This file modified by TranslucentFoxHuman
  */
 
 /*
@@ -51,6 +53,8 @@
 #include "tbparse.h"
 #include "common.h"
 #include "smglobal.h"
+
+#include <pwd.h>
 
 /* Forward declarations */
 static char* find_rc_file(void);
@@ -183,7 +187,17 @@ int main(int argc, char **argv)
 		char *login;
 		char host[256]="localhost";
 
-		login=getlogin();
+		if (!getlogin()) {
+			struct passwd *p;
+			if ((p = getpwuid(getuid())) == NULL) {
+				perror("getpwuid() error");
+				login="";
+			} else {
+				login=p->pw_name;
+			}
+		} else {
+			login=getlogin();
+		}
 		gethostname(host,255);
 		
 		title=malloc(strlen(login)+strlen(host)+2);

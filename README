@@ -1,3 +1,5 @@
+This repository was forked from https://github.com/alx210/mwm-utils and modified by TranslucentFoxHuman
+
 UTILITIES FOR EMWM
 ==================
 xmsm is simple session manager that provides session configuration and screen
@@ -28,3 +30,9 @@ necessary.
 -
 System shutdown, reboot and suspend commands can be altered at compile time
 only. Edit constants in smconf.h, or override them in CFLAGS if necessary.
+
+
+WHAT WAS CHANGED FROM ORIGINAL REPOSITORY?
+=======================
+The "getlogin()" function was used in "smmain.c" and "tbmain.c", but this function is deprecated. This had caused core-dump crash.
+So I changed the getlogin function of these source code to alternative. This allows it to work properly when compiled with recent compilers.

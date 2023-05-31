@@ -18,6 +18,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
+ *
+ * This file modified by TranslucentFoxHuman.
  */
 
 /*
@@ -382,7 +384,17 @@ static void lock_screen(void)
 	struct passwd *passwd;
 	
 	/* make sure we can authenticate before locking */
-	login = getlogin();
+	if (!getlogin()) {
+			struct passwd *p;
+			if ((p = getpwuid(getuid())) == NULL) {
+				perror("getpwuid() error");
+				login="";
+			} else {
+				login=p->pw_name;
+			}
+		} else {
+			login=getlogin();
+		}
 	
 	if(set_privileges(True)) {
 
@@ -654,7 +666,17 @@ static void create_locking_widgets(void)
 	
 	wtmp = XmCreateLabelGadget(wrowcol,"lockedBy",NULL,0);
 
-	login=getlogin();
+	if (!getlogin()) {
+			struct passwd *p;
+			if ((p = getpwuid(getuid())) == NULL) {
+				perror("getpwuid() error");
+				login="";
+			} else {
+				login=p->pw_name;
+			}
+		} else {
+			login=getlogin();
+		}
 	gethostname(host,255);
 		
 	locked_by=malloc(strlen(login)+strlen(host)+2);
@@ -784,7 +806,17 @@ static void passwd_enter_cb(Widget w,
 	char *cpw = NULL;
 	char *upw = NULL;
 	
-	login = getlogin();
+	if (!getlogin()) {
+			struct passwd *p;
+			if ((p = getpwuid(getuid())) == NULL) {
+				perror("getpwuid() error");
+				login="";
+			} else {
+				login=p->pw_name;
+			}
+		} else {
+			login=getlogin();
+		}
 	
 	set_privileges(True);
 	
